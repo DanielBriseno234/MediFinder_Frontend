@@ -1,0 +1,453 @@
+<div class="home-container">
+    <div class="content">
+        <div class="card flex justify-content-center">
+            <p-tabView>
+                
+                <p-tabPanel header="Citas Pendientes">
+                    <p-card header="Solicitudes de citas">
+                        <div class="card">
+                            <p-table
+                                #dt3
+                                [value]="lstCitasPendientes"
+                                selectionMode="single" 
+                                [(selection)]="citas" 
+                                dataKey="id"
+                                [rows]="10"
+                                [rowsPerPageOptions]="[10, 25, 50]"
+                                [loading]="loading"
+                                [scrollable]="true" 
+                                scrollHeight="400px" 
+                                [paginator]="true"
+                                [globalFilterFields]="['nombrePaciente', 'descripcion', 'fechaInicio', 'estatus']"
+                                [tableStyle]="{ 'min-width': '75rem' }"
+                            >
+                            <ng-template pTemplate="caption">
+                                <div class="flex">
+                                    <p-iconField iconPosition="left" class="ml-auto">
+                                        <p-inputIcon>
+                                            <i class="pi pi-search"></i>
+                                        </p-inputIcon>
+                                        <input 
+                                            pInputText 
+                                            type="text" 
+                                            [(ngModel)]="search"
+                                            (input)="dt3.filterGlobal(search , 'contains')" 
+                                            placeholder="Search keyword" />
+                                    </p-iconField>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:20%">Nombre</th>
+                                    <th style="width:20%">Descripción</th>
+                                    <th style="width:20%">Fecha</th>
+                                    <th style="width:20%">Estatus</th>
+                                    <th style="width:20%">Confirmar</th>
+                                    <th style="width:20%">Cancelar</th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="nombrePaciente" 
+                                            placeholder="Buscar Por Nombre" 
+                                            ariaLabel="Filtrar nombrePaciente" />
+                                    </th>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="descripcion"
+                                            placeholder="Buscar Por Descripcion" 
+                                            ariaLabel="Filtrar descripcion" />
+                                    </th>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="fechaInicio"
+                                            placeholder="Buscar Por Fecha" 
+                                            ariaLabel="Filtrar fechaInicio" />
+                                    </th>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="estatus"
+                                            placeholder="Buscar Por Estatus" 
+                                            ariaLabel="Filtrar Estatus" />
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cita>
+                                <tr [pSelectableRow]="citaSeleccionada">
+                                    <td>
+                                        {{ cita.nombrePaciente }}  {{cita.apellidoPaciente}}
+                                    </td>
+                                    <td>
+                                        <span class="ml-1 vertical-align-middle">
+                                            {{ cita.descripcion }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="ml-1 vertical-align-middle">
+                                            {{ cita.fechaInicio | fechaBonita}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="ml-1 vertical-align-middle">
+                                            {{ cita.estatus | estatusCitas }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <p-button class="btnTable" icon="pi pi-check" (onClick)="confirmarCancelarCita('confirmar', cita.id)" />
+                                    </td>
+                                    <td>
+                                        <p-button class="btnTable" icon="pi pi-times" (onClick)="confirmarCancelarCita('cancelar', cita.id)"/>
+                                    </td>
+                                    
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5">No hay citas pendientes por el momento.</td>
+                                </tr>
+                            </ng-template>
+                            </p-table>
+                        </div>
+                    </p-card>
+                </p-tabPanel>
+                
+                <p-tabPanel header="Citas del Día">
+                    <p-card header="Tabla de Citas">
+                        <div class="card">
+                            <p-table
+                                #dt2
+                                [value]="lstCitasActivas"
+                                selectionMode="single" 
+                                [(selection)]="citas" 
+                                dataKey="id"
+                                [rows]="10"
+                                [rowsPerPageOptions]="[10, 25, 50]"
+                                [loading]="loading"
+                                [scrollable]="true" 
+                                scrollHeight="400px" 
+                                [paginator]="true"
+                                [globalFilterFields]="['nombrePaciente', 'descripcion', 'fechaInicio', 'estatus']"
+                                [tableStyle]="{ 'min-width': '75rem' }"
+                            >
+                            <ng-template pTemplate="caption">
+                                <div class="flex">
+                                    <p-iconField iconPosition="left" class="ml-auto">
+                                        <p-inputIcon>
+                                            <i class="pi pi-search"></i>
+                                        </p-inputIcon>
+                                        <input 
+                                            pInputText 
+                                            type="text" 
+                                            [(ngModel)]="search"
+                                            (input)="dt2.filterGlobal(search , 'contains')" 
+                                            placeholder="Search keyword" />
+                                    </p-iconField>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:20%">Nombre</th>
+                                    <th style="width:20%">Descripción</th>
+                                    <th style="width:20%">Fecha</th>
+                                    <th style="width:20%">Estatus</th>
+                                    <th style="width:20%">Ver historial</th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="nombrePaciente" 
+                                            placeholder="Buscar Por Nombre" 
+                                            ariaLabel="Filtrar nombrePaciente" />
+                                    </th>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="descripcion"
+                                            placeholder="Buscar Por Descripcion" 
+                                            ariaLabel="Filtrar descripcion" />
+                                    </th>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="fechaInicio"
+                                            placeholder="Buscar Por Fecha" 
+                                            ariaLabel="Filtrar fechaInicio" />
+                                    </th>
+                                    <th>
+                                        <p-columnFilter 
+                                            type="text"
+                                            field="estatus"
+                                            placeholder="Buscar Por Estatus" 
+                                            ariaLabel="Filtrar Estatus" />
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cita>
+                                <tr [pSelectableRow]="citaSeleccionada" (dblclick)="detallePacienteCita(cita)">
+                                    <td>
+                                        {{ cita.nombrePaciente }}  {{cita.apellidoPaciente}}
+                                    </td>
+                                    <td>
+                                        <span class="ml-1 vertical-align-middle">
+                                            {{ cita.descripcion }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="ml-1 vertical-align-middle">
+                                            {{ cita.fechaInicio | fechaBonita}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="ml-1 vertical-align-middle">
+                                            {{ cita.estatus | estatusCitas }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <p-button class="btnTable" icon="pi pi-history" (onClick)="mostrarHistorial(cita)"/>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5">No hay citas programadas por el momento.</td>
+                                </tr>
+                            </ng-template>
+                            </p-table>
+                        </div>
+                    </p-card>        
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+</div>
+<p-confirmDialog class="btnConfirm" />
+<p-toast />
+
+<div class="card flex justify-content-center">
+    <p-dialog header="Cancelación" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+        <span class="p-text-secondary block mb-5">Ingresa el motivo de cancelación en el siguiente campo</span>
+        <div class="row" style="margin: 5%;">
+            <div class="col-sm-12">
+              <p-floatLabel>
+                <input  class="input_login" pInputText id="motivo" name="motivo" [(ngModel)]="motivo"/>
+                <label for="motivo">Motivo de cancelación</label>
+              </p-floatLabel>
+            </div>
+        </div>
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Volver" severity="secondary" (onClick)="visible = false" />
+            <p-button [disabled]="motivo ==='' || motivo === null" label="Continuar" (onClick)="visible = false; cacelar()" />
+        </div>
+    </p-dialog>
+</div>
+
+
+
+<!--  -->
+
+<div class="card flex justify-content-center">
+    <p-dialog 
+        header="Datos del paciente" 
+        [(visible)]="visible2" 
+        [modal]="true" 
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+        [style]="{ width: '50vw' }" 
+        [draggable]="false" 
+        [resizable]="false">
+        <p-scrollPanel [style]="{ width: '100%', height: '500px' }">
+        <p-tabView>
+            @if(visibleInsertar){
+                <p-tabPanel header="Datos Personales">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input readonly pInputText id="nombre" name="nombre" [(ngModel)]="datosPaciente.nombre" />
+                                    <label for="nombre">Nombre</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input readonly pInputText id="apellido" name="apellido" [(ngModel)]="datosPaciente.apellido" />
+                                    <label for="apellido">Apellido</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input readonly pInputText id="email" name="email" [(ngModel)]="datosPaciente.email" />
+                                    <label for="email">Email</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input readonly pInputText id="telefono" name="telefono" [(ngModel)]="datosPaciente.telefono" />
+                                    <label for="telefono">Teléfono</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input readonly pInputText id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="datosPaciente.fechaNacimiento" />
+                                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input readonly pInputText id="sexo" name="sexo" [(ngModel)]="datosPaciente.sexo" />
+                                    <label for="sexo">Sexo</label>
+                                </p-floatLabel>
+                            </div>
+                        </div>
+                    </div>        
+                </p-tabPanel>
+                <p-tabPanel header="Detalles de la Cita">
+                    <div class="container frmCitaObserva">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input pInputText id="idCita" name="idCita" [(ngModel)]="citaDetalle.idCita" /> -->
+                                    <p-inputNumber  [ngClass]="'full-width'"  [disabled]="true" inputId="integeronly"  [(ngModel)]="citaDetalle.idCita" />
+                                    <label for="idCita">Número de Consulta</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="datetime-local" id="fecha" name="fecha" [(ngModel)]="citaDetalle.fecha" /> -->
+                                    <p-calendar [ngClass]="'full-width'" [disabled]="true" [(ngModel)]="citaDetalle.fecha" [dateFormat]="'yy/mm/dd'"></p-calendar>
+                                    <label for="fecha">Fecha</label>
+                                </p-floatLabel>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input pInputText id="observaciones" name="observaciones" [(ngModel)]="citaDetalle.observaciones" />
+                                    <label for="observaciones">Observaciones</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input pInputText id="diagnostico" name="diagnostico" [(ngModel)]="citaDetalle.diagnostico" />
+                                    <label for="diagnostico">Diagnóstico</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input pInputText id="padecimientos" name="padecimientos" [(ngModel)]="citaDetalle.padecimientos" />
+                                    <label for="padecimientos">Padecimientos</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <input pInputText id="intervenciones" name="intervenciones" [(ngModel)]="citaDetalle.intervenciones" />
+                                    <label for="intervenciones">Intervenciones</label>
+                                </p-floatLabel>
+                            </div>
+                            
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="number" id="pesoPaciente" name="pesoPaciente" [(ngModel)]="citaDetalle.pesoPaciente" /> -->
+                                    <p-inputNumber [ngClass]="'full-width'" inputId="integeronly"  [(ngModel)]="citaDetalle.pesoPaciente" />
+                                    <label for="pesoPaciente">Peso Paciente</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="number" id="tallaPaciente" name="tallaPaciente" [(ngModel)]="citaDetalle.tallaPaciente" /> -->
+                                    <p-inputNumber [ngClass]="'full-width'" inputId="integeronly"  [(ngModel)]="citaDetalle.tallaPaciente" />
+                                    <label for="tallaPaciente">Talla Paciente</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="number" id="glucosaPaciente" name="glucosaPaciente" [(ngModel)]="citaDetalle.glucosaPaciente" /> -->
+                                    <p-inputNumber [ngClass]="'full-width'" inputId="integeronly"  [(ngModel)]="citaDetalle.glucosaPaciente" />
+                                    <label for="glucosaPaciente">Glucosa Paciente</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="number" id="oxigenacionPaciente" name="oxigenacionPaciente" [(ngModel)]="citaDetalle.oxigenacionPaciente" /> -->
+                                    <p-inputNumber [ngClass]="'full-width'" inputId="integeronly"  [(ngModel)]="citaDetalle.oxigenacionPaciente" />
+                                    <label for="oxigenacionPaciente">Oxigenación Paciente</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="number" id="presionPaciente" name="presionPaciente" [(ngModel)]="citaDetalle.presionPaciente" /> -->
+                                    <p-inputNumber [ngClass]="'full-width'" inputId="integeronly"  [(ngModel)]="citaDetalle.presionPaciente" />
+                                    <label for="presionPaciente">Presión Paciente</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-6">
+                                <p-floatLabel>
+                                    <!-- <input type="number" id="temperaturaCorporalPaciente" name="temperaturaCorporalPaciente" [(ngModel)]="citaDetalle.temperaturaCorporalPaciente" /> -->
+                                    <p-inputNumber [ngClass]="'full-width'" inputId="integeronly"  [(ngModel)]="citaDetalle.temperaturaCorporalPaciente" />
+                                    <label for="temperaturaCorporalPaciente">Temperatura Corporal Paciente</label>
+                                </p-floatLabel>
+                            </div>
+                            <div class="col-sm-12">
+                                <p-button label="Gurdar" (onClick)="confirmarHisorial()"/>
+                            </div>
+                        </div>
+                    </div>
+                </p-tabPanel>
+            }@else{
+            <p-tabPanel header="Historial clinico">
+                <div class="container frmCitaObserva">
+                    <div *ngFor="let paciente of historialClinico" class="mb-4">
+                      <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                          <h4 class="mb-0">{{ paciente.nombrePaciente }} {{ paciente.apellidoPaciente }}</h4>
+                        </div>
+                        <div class="card-body">
+                          <div *ngFor="let cita of paciente.historialClinico" class="mb-3">
+                            <h5 class="card-title">Cita del {{ cita.fechaInicioCita | date:'longDate' }}</h5>
+                            <p class="mb-1"><strong>Hora:</strong> {{ cita.fechaInicioCita | date:'shortTime' }} - {{ cita.fechaFinCita | date:'shortTime' }}</p>
+                            <p class="mb-1"><strong>Diagnóstico:</strong> {{ cita.diagnostico }}</p>
+                            <p class="mb-1"><strong>Observaciones:</strong> {{ cita.observaciones }}</p>
+                            <p class="mb-1"><strong>Padecimientos:</strong> {{ cita.padecimientos }}</p>
+                            <p class="mb-1"><strong>Intervenciones:</strong> {{ cita.intervenciones }}</p>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <p class="mb-1"><strong>Peso:</strong> {{ cita.pesoPaciente }} kg</p>
+                              </div>
+                              <div class="col-md-4">
+                                <p class="mb-1"><strong>Talla:</strong> {{ cita.tallaPaciente }} cm</p>
+                              </div>
+                              <div class="col-md-4">
+                                <p class="mb-1"><strong>Glucosa:</strong> {{ cita.glucosaPaciente }} mg/dL</p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <p class="mb-1"><strong>Oxigenación:</strong> {{ cita.oxigenacionPaciente }} %</p>
+                              </div>
+                              <div class="col-md-4">
+                                <p class="mb-1"><strong>Presión arterial:</strong> {{ cita.presionPaciente }} mmHg</p>
+                              </div>
+                              <div class="col-md-4">
+                                <p class="mb-1"><strong>Temperatura corporal:</strong> {{ cita.temperaturaCorporalPaciente }} °C</p>
+                              </div>
+                            </div>
+                            <p class="mt-2"><strong>Médico a cargo:</strong> Dr. {{ cita.nombreMedico }} {{ cita.apellidoMedico }}</p>
+                            <hr>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+            </p-tabPanel>
+            }
+        </p-tabView>
+        </p-scrollPanel>
+        
+    </p-dialog>
+  </div>

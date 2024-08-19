@@ -1,0 +1,86 @@
+.home-container {
+    background-image: url('../../../../assets/img/FondoHome.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+::ng-deep .multiSelect ul{
+    padding: 0%;
+}
+
+::ng-deep .container .p-multiselect{
+    width: 100%;
+}
+
+::ng-deep .container .p-dropdown{
+    width: 100%;
+}
+
+::ng-deep .p-scrollpanel-wrapper{
+    padding: 2%;
+}
+
+::ng-deep .p-stepper ul{
+    padding-left: 0%;
+}
+
+
+::ng-deep .p-stepper input{
+    width: 100%;
+}
+
+::ng-deep .p-stepper .btnStepper button{
+    width: 100%;
+}
+
+.col-sm-6, .col-sm-12, .col-sm-4{
+    margin-top: 5%;
+}
+
+/* Contenedor de las tarjetas */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; 
+}
+
+/* Estilo para cada tarjeta */
+.card-container > div {
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 16px; 
+    width: 600px;
+    background-color: #fff; 
+    text-align: center; 
+}
+
+/* Estilo para las imágenes */
+.card-container img {
+    max-width: 100%; 
+    height: auto; 
+    border-radius: 4px; 
+}
+
+
+.galleria-container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100vh; /* Ajusta esto si necesitas un tamaño específico */
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* Ajusta la imagen dentro del contenedor */
+}
+
+.card{
+    margin-bottom: 10%;
+}

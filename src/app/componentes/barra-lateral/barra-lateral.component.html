@@ -1,0 +1,37 @@
+<p-sidebar [(visible)]="sidebarVisible">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-2 barra">
+            <p-avatar 
+                image="assets/img/logo.png" 
+                shape="circle" />
+            <span class="font-bold">
+                 Dr. {{usuario.nombreCompleto}}
+            </span>
+        </div>
+    </ng-template>
+    <div class="menuContainer">
+        <p-menu [model]="items">
+            <ng-template pTemplate="item" let-item>
+                <ng-container *ngIf="item.route; else elseBlock">
+                    <a [routerLink]="item.route" class="p-menuitem-link" (click)="showSidebar()">
+                        <span [class]="item.icon"></span>
+                        <span class="ml-2">{{ item.label }}</span>
+                    </a>
+                </ng-container>
+                <ng-template #elseBlock>
+                    <a [href]="item.url" class="p-menuitem-link" (click)="showSidebar()">
+                        <span [class]="item.icon"></span>
+                        <span class="ml-2">{{ item.label }}</span>
+                    </a>
+                </ng-template>
+            </ng-template>
+        </p-menu>
+        <div class="logout-button" style="padding: 10px;">
+            <p-button [rounded]="true" severity="info" label="Cerrar sesión" icon="pi pi-power-off" (onClick)="logout()"></p-button>
+        </div>
+    </div>
+</p-sidebar>
+<div class="bntDisplay">
+    <p-button [rounded]="true" severity="info" (onClick)="showSidebar()" icon="pi pi-bars" class="sidebar-button" />
+</div>
+<p-toast />

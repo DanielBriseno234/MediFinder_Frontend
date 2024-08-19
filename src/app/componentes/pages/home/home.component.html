@@ -1,0 +1,209 @@
+<div class="home-container">
+    <!-- <br> -->
+    @if(usuario.esMedico && usuario.estatus != 2){
+    <div class="galleria-container">
+        <div class="card-container">
+            <div *ngFor="let grafica of graficas">
+                <h3>{{ grafica.nombre }}</h3>
+                <img [src]="'data:image/png;base64,' + grafica.imagenBase64" alt="Gráfica" />
+            </div>
+        </div>        
+    </div>
+    }@else {    
+    <div class="galleria-container">
+        <div class="card">
+            <p-galleria 
+                [value]="images" 
+                [showIndicators]="true" 
+                [showThumbnails]="false" 
+                [changeItemOnIndicatorHover]="true" 
+                [responsiveOptions]="responsiveOptions" 
+                [containerStyle]="{ 'max-width': '60vw', 'max-height': '60vh' }"> 
+                    <ng-template pTemplate="item" let-item>
+                        <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                    </ng-template>
+            </p-galleria>
+        </div>
+    </div>        
+    }
+</div>
+<p-confirmDialog />
+<p-dialog 
+header="Complete su información" 
+[(visible)]="visible" 
+[modal]="true" 
+[breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+[style]="{ height: '80vw' }" 
+[draggable]="false" 
+[resizable]="false"
+[closeOnEscape]="false"
+[closable]="false">
+    <div class="container">
+        <p-scrollPanel [style]="{ width: '100%', height: '800px' }">
+            <p-stepper>
+                <p-stepperPanel header="Horario Laboral">
+                    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                        <div class="flex flex-column h-12rem">
+                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                <form [formGroup]="frmHorariosTipoPago">
+                                    <div class="row">
+                                        <div class="col-sm-12 multiSelect">
+                                        <p-floatLabel>
+                                            <p-multiSelect 
+                                            [options]="lstDias" 
+                                            optionLabel="dia" 
+                                            [maxSelectedLabels]="6"
+                                            selectedItemsLabel="{0} Días seleccionados"
+                                            name="diasLaborales"
+                                            formControlName="diasLaborales"
+                                            placeholder="Select Cities" />
+                                            <label for="nombre">Días Laborales</label>
+                                        </p-floatLabel>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <p-floatLabel>
+                                                <p-calendar name="horaInicio" [(ngModel)]="horaInicio" [showTime]="true" [timeOnly]="true" hourFormat="12"
+                                                name="horaInicio"
+                                                formControlName="horaInicio"></p-calendar>
+                                                <label for="nombre">Hora de Inicio</label>
+                                            </p-floatLabel>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <p-floatLabel>
+                                                <p-calendar name="horaFin" [(ngModel)]="horaFin" [showTime]="true" [timeOnly]="true" hourFormat="12"
+                                                name="horaFin"
+                                                formControlName="horaFin"></p-calendar>
+                                                <label for="nombre">Hora de fin</label>
+                                            </p-floatLabel>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="tiposSuscripciones.length > 0">
+                                        <div class="col-sm-12">
+                                            <p-stepper orientation="vertical">
+                                                <p-stepperPanel [header]="tiposSuscripciones[0].nombre"  >
+                                                    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                                                        <div class="flex flex-column h-12rem">
+                                                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                                                <p>Descripcion: {{tiposSuscripciones[0].descripcion}}</p>
+                                                                <p>Precio: ${{tiposSuscripciones[0].precio}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-stepperPanel>
+                                                <p-stepperPanel [header]="tiposSuscripciones[1].nombre"  >
+                                                    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                                                        <div class="flex flex-column h-12rem">
+                                                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                                                <p>Descripcion: {{tiposSuscripciones[1].descripcion}}</p>
+                                                                <p>Precio: ${{tiposSuscripciones[1].precio}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-stepperPanel>
+                                                <p-stepperPanel [header]="tiposSuscripciones[2].nombre"  >
+                                                    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                                                        <div class="flex flex-column h-12rem">
+                                                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                                                <p>Descripcion: {{tiposSuscripciones[2].descripcion}}</p>
+                                                                <p>Precio: ${{tiposSuscripciones[2].precio}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-stepperPanel>
+                                            </p-stepper>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="tiposSuscripciones.length > 0">
+                                        <div class="col-sm-12 multiSelect">
+                                        <p-floatLabel>
+                                            <p-dropdown 
+                                            [options]="tiposSuscripciones" 
+                                            optionLabel="nombre" 
+                                            name="tipoSuscripcion"
+                                            formControlName="tipoSuscripcion"/>
+                                            <label for="nombre">Tipo de Suscripcion</label>
+                                        </p-floatLabel>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="flex pt-4 justify-content-end btnStepper">
+                            <p-button 
+                                severity="info"
+                                label="Siguiente" 
+                                icon="pi pi-arrow-right" 
+                                iconPos="right"
+                                (onClick)="nextCallback.emit()" />
+                        </div>
+                    </ng-template>
+                </p-stepperPanel>
+                <p-stepperPanel header="Información Bancaria">
+                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+                        <div class="flex flex-column h-12rem">
+                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                <form [formGroup]="frmPagoTarjeta">
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <p-floatLabel>
+                                          <input pInputText name="numeroTarjeta" formControlName="numeroTarjeta" maxlength="16" />
+                                          <label for="numeroTarjeta">Número de Tarjeta</label>
+                                        </p-floatLabel>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <p-floatLabel>
+                                          <p-dropdown
+                                            [options]="lstBancos"
+                                            optionLabel="nombre"
+                                            name="banco"
+                                            formControlName="banco"
+                                          ></p-dropdown>
+                                          <label for="banco">Banco de Pago</label>
+                                        </p-floatLabel>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-sm-6">
+                                        <p-floatLabel>
+                                          <input pInputText formControlName="cvv" maxlength="3" name="cvv"/>
+                                          <label for="cvv">CVV</label>
+                                        </p-floatLabel>
+                                      </div>
+                                      <div class="col-sm-6">
+                                        <p-floatLabel>
+                                          <input pInputText formControlName="fechaVencimiento" placeholder="MM/YY" name="fechaVencimiento"/>
+                                          <label for="fechaVencimiento">Fecha de Vencimiento</label>
+                                        </p-floatLabel>
+                                      </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="flex pt-4 justify-content-between btnStepper">
+                            <p-button 
+                                severity="info"
+                                label="Regresar" 
+                                icon="pi pi-arrow-left" 
+                                (onClick)="prevCallback.emit()" />
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <p-button severity="info" 
+                                    label="Pagar"
+                                    [disabled]="frmHorariosTipoPago.invalid || frmPagoTarjeta.invalid"
+                                    (onClick)="prepraraValores()"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-stepperPanel>
+            </p-stepper>
+            
+        </p-scrollPanel>
+    </div>
+    
+</p-dialog>
+<p-toast />

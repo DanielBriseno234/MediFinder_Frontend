@@ -1,0 +1,61 @@
+::ng-deep .sidebar-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+::ng-deep .menuContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+::ng-deep .menuContainer .p-component {
+    border: none;
+    width: 100%;
+}
+
+::ng-deep .menuContainer .p-component ul {
+    padding: 0;
+}
+
+::ng-deep .menuContainer .pi {
+    margin-right: 2%;
+}
+
+::ng-deep .menuContainer a {
+    text-decoration: none;
+    color: #00c3ff;
+}
+
+::ng-deep .menuContainer .p-menu {
+    flex-grow: 1;
+}
+
+::ng-deep .menuContainer .p-menu .p-submenu-header {
+    color: #00c3ff;
+}
+
+::ng-deep .p-sidebar .p-sidebar-header {
+    justify-content: end;
+}
+
+::ng-deep .bntDisplay button {
+    border-radius: 50%;
+}
+
+::ng-deep .logout-button {
+    margin-top: auto;
+    padding: 10px;
+}
+
+::ng-deep .p-avatar.p-avatar-circle {
+    width: auto;
+    height: auto;
+}
+
+::ng-deep .p-sidebar {
+    font-size: x-large;
+}
+

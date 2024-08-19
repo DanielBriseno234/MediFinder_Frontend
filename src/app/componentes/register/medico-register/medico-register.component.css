@@ -1,0 +1,36 @@
+.col-sm-6, .col-sm-12, .col-sm-4{
+    margin-top: 5%;
+}
+
+.card{
+    margin: 10%;
+}
+
+.error-message {
+    color: #d9534f;
+    font-size: 0.875em;
+    margin: 1% 0 0 5%;
+}
+
+::ng-deep .p-multiselect{
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.btnSubmit{
+    margin-top: 5%;
+}
+
+.acepto{
+    width: 100%;
+    text-align: center;
+}
+
+::ng-deep .acepto label{
+    margin-left: 1%;
+}
+
+::ng-deep .btnConfirm .p-button{
+    width: 47%;
+    margin: 1%;
+}

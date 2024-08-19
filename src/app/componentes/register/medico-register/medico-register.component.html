@@ -1,0 +1,265 @@
+<p-dialog 
+    header="REGISTRO" 
+    [position]="'right'"
+    [(visible)]="visible" 
+    [modal]="true" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [style]="{ width: '50vw', height: '80vw' }" 
+    [draggable]="false" 
+    [resizable]="false">
+    
+  <p-stepper>
+      <p-stepperPanel header="Información Personal">
+          <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+              <div class="flex flex-column h-12rem">
+                <div class="container">
+                  <form [formGroup]="frmMedico">
+                    <!-- NOMBRE Y APELLIDO -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="nombre" formControlName="nombre"/>
+                          <label for="nombre">Nombre</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="apellido" formControlName="apellido"/>
+                          <label for="apellido">Apellidos</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- CORREO ELECTRONICO -->
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="email" formControlName="email"/>
+                          <label for="email">Correo electrónico</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- CONTRASEÑA Y CONFIRMACION -->
+                  <div class="row">
+                      <div class="col-sm-6">
+                          <p-floatLabel>
+                          <p-password [feedback]="false" [toggleMask]="true" formControlName="contrasena"></p-password>
+                          <label for="contrasena">Contraseña</label>
+                          </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                          <p-floatLabel>
+                          <p-password [feedback]="false" [toggleMask]="true" formControlName="confirmarContrasena"></p-password>
+                          <label for="confirmarContrasena">Confirmar Contraseña</label>
+                          </p-floatLabel>
+                          <div *ngIf="frmMedico.get('confirmarContrasena')?.errors?.['passwordMismatch'] && frmMedico.get('confirmarContrasena')?.touched">
+                          <p class="error-message">Las contraseñas no coinciden.</p>
+                          </div>
+                      </div>
+                  </div>  
+                    <!-- TELEFONO Y PAIS -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="telefono" formControlName="telefono" (keydown)="onlyNumbers($event)" />
+                          <label for="telefono">Teléfono</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="pais" formControlName="pais"/>
+                          <label for="pais">País</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- CALLE Y COLONIA -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="colonia" formControlName="colonia"/>
+                          <label for="colonia">Colonia</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="calle" formControlName="calle"/>
+                          <label for="calle">Calle</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- NUMERO, CIUDAD Y CODIGO POSTAL -->
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="numero" formControlName="numero" (keydown)="onlyNumbers($event)"/>
+                          <label for="numero">Número</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-4">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="ciudad" formControlName="ciudad"/>
+                          <label for="ciudad">Ciudad</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-4">
+                        <p-floatLabel>
+                          <input class="input_login" pInputText id="codigoPostal" formControlName="codigoPostal" (keydown)="onlyNumbers($event)"/>
+                          <label for="codigoPostal">C.P.</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                  </form>
+                </div>              
+              </div>
+              <div class="flex pt-4 justify-content-end">
+                  <p-button 
+                      label="Siguiente" 
+                      icon="pi pi-arrow-right" 
+                      iconPos="right"
+                      severity="info"
+                      [disabled]="frmMedico.invalid" 
+                      (onClick)="nextCallback.emit()" />
+              </div>
+          </ng-template>
+      </p-stepperPanel>
+      <p-stepperPanel header="Información Profesional">
+          <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+              <div class="flex flex-column h-12rem">
+                  <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                    <div class="container">
+                      <form [formGroup]="frmMedico2">
+                        <!-- CEDULA Y ESPECIALIDADES -->
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <p-floatLabel>
+                              <input class="input_login" pInputText id="nombre" formControlName="cedula"/>
+                              <label for="nombre">Cedula profesional</label>
+                            </p-floatLabel>
+                          </div>
+                          <div class="col-sm-6">
+                            <p-floatLabel>
+                              <p-multiSelect 
+                                [options]="lstEspecialidades" 
+                                formControlName="especialidades"
+                                optionLabel="nombre" 
+                                selectedItemsLabel="{0} Especialidades seleccionadas"
+                                placeholder="Select Cities" />
+                              <label for="nombre">Especialidades</label>
+                            </p-floatLabel>
+                          </div>
+                        </div>
+                        <!-- AVISO DE PRIVACIDAD -->
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <p-accordion [activeIndex]="0">
+                              <p-accordionTab header="Aviso de Privacidad">
+                                <p-scrollPanel [style]="{ width: '100%', height: '150px' }">
+                                  <div class="privacy-notice">
+                                    <h3>Aviso de Privacidad</h3>
+                                    <p>En cumplimiento con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, 
+                                    <strong>Medifinder</strong> con domicilio en San José del maguey #179 A, le informa que sus datos personales serán tratados con las siguientes finalidades:</p>
+                                    
+                                    <ul>
+                                      <li>Proveer los servicios y productos requeridos.</li>
+                                      <li>Informar sobre cambios en los mismos.</li>
+                                      <li>Evaluar la calidad del servicio.</li>
+                                    </ul>
+                                    
+                                    <p>Para mayor información sobre el tratamiento de sus datos personales, puede consultar nuestro <a href="[enlace al documento completo]" target="_blank">Aviso de Privacidad Completo</a>.</p>
+                                    
+                                    <p>Si usted no está de acuerdo con el tratamiento de sus datos personales, por favor marque la casilla correspondiente.</p>
+                                  </div>
+                                  <div class="acepto">
+                                    <p-checkbox 
+                                      formControlName="aviso" 
+                                      value="acepto" 
+                                      inputId="ac" />
+                                      <label for="ac">ACEPTO</label>
+                                  </div>
+                                </p-scrollPanel>
+                              </p-accordionTab>
+                            </p-accordion>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+              </div>
+              <div class="flex pt-4 justify-content-between">
+                  <p-button 
+                      label="Regresar" 
+                      icon="pi pi-arrow-left"
+                      severity="info" 
+                      (onClick)="prevCallback.emit()" />
+                  <div class="btnSubmit">
+                    <p-button 
+                      type="submit" 
+                      label="Continuar" 
+                      [text]="true" 
+                      [raised]="true" 
+                      severity="info" 
+                      [disabled]="frmMedico.invalid || frmMedico2.invalid" 
+                      (onClick)="onSubmit()"></p-button>
+                  </div>
+              </div>
+          </ng-template>
+      </p-stepperPanel>
+  </p-stepper>
+  <p-confirmDialog class="btnConfirm" />
+    <!-- <p-button (onClick)="confirmar($event)" label="Save" [outlined]="true" /> -->
+</p-dialog>
+  
+<!-- DIALOGO PARA LAS ESPECIALIDADES -->
+<p-dialog 
+    header="Honorarios" 
+    [(visible)]="visible2" 
+    [modal]="true" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [style]="{ width: '50vw' }" 
+    [draggable]="false" 
+    [resizable]="false">
+    <!-- FORMULARIO DE HONORARIOS Y CEDULAS -->
+    <form action="">
+      <div *ngFor="let especialidad of especialidadesMedico; let i = index">
+        <div class="row">
+          <div class="col-sm-4">
+            <p>{{especialidad.nombre}}</p>
+          </div>
+          <div class="col-sm-4">
+            <p-floatLabel>
+              <input 
+                class="input_login" 
+                pInputText 
+                id="honorarios-{{i}}" 
+                (input)="ingresarHonorarios(i, $event)"
+                (keydown)="onlyNumbers($event)"
+              />
+              <label for="honorarios-{{i}}">Costo por consulta</label>
+            </p-floatLabel>
+          </div>
+          <div class="col-sm-4">
+            <p-floatLabel>
+              <input 
+                class="input_login" 
+                pInputText 
+                id="cedula-{{i}}" 
+                (input)="ingresaCedulas(i, $event)"
+              />
+              <label for="honorarios-{{i}}">Cedula de Especialida</label>
+            </p-floatLabel>
+          </div>
+        </div>
+      </div>
+      <div class="btnSubmit">
+        <p-button 
+          type="submit" 
+          label="Finalizar" 
+          [text]="true" 
+          [raised]="true" 
+          severity="info" 
+          [disabled]="btnHonorariosValid"
+          (onClick)="confirmarHonorarios()"></p-button>
+      </div>
+    </form>
+</p-dialog>
+
+<p-toast />

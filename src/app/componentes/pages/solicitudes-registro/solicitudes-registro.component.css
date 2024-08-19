@@ -1,0 +1,52 @@
+.home-container {
+    background-image: url('../../../../assets/img/FondoHome.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+
+.content{
+    padding: 5%;
+}
+
+/*ESTILOS DEL DIALOGO*/
+
+::ng-deep .p-dialog .col-sm-6, .col-sm-12, .col-sm-4{
+    margin-top: 5%;
+}
+
+::ng-deep .p-dialog .card{
+    margin: 10%;
+}
+
+::ng-deep .p-dialog .p-multiselect{
+    min-width: 100%;
+    max-width: 100%;
+}
+
+::ng-deep .p-dialog .btnSubmit{
+    margin-top: 5%;
+}
+
+::ng-deep .p-dialog .acepto{
+    width: 100%;
+    text-align: center;
+}
+
+::ng-deep .p-dialog .acepto label{
+    margin-left: 1%;
+}
+
+::ng-deep .p-dialog .btnConfirm .p-button{
+    width: 47%;
+    margin: 1%;
+}
+
+::ng-deep .p-dialog  input, 
+::ng-deep .p-dialog button{
+    width: 100%;
+}

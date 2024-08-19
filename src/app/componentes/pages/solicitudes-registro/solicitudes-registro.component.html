@@ -1,0 +1,292 @@
+<div class="home-container">
+    <div class="content">
+        <div class="card flex justify-content-center">
+            <p-card header="Solicitudes de registro">
+                <div class="card">
+                    <p-table
+                        #dt2
+                        [value]="lstMedicos"
+                        selectionMode="single" 
+                        [(selection)]="medicos" 
+                        dataKey="id"
+                        [rows]="10"
+                        [rowsPerPageOptions]="[10, 25, 50]"
+                        [loading]="loading"
+                        [scrollable]="true" 
+                        scrollHeight="400px" 
+                        [paginator]="true"
+                        [globalFilterFields]="['nombre', 'pais', 'telefono', 'estatus', 'fechaRegistro']"
+                        [tableStyle]="{ 'min-width': '75rem' }"
+                    >
+                    <ng-template pTemplate="caption">
+                        <div class="flex">
+                            <p-iconField iconPosition="left" class="ml-auto">
+                                <p-inputIcon>
+                                    <i class="pi pi-search"></i>
+                                </p-inputIcon>
+                                <input 
+                                    pInputText 
+                                    type="text" 
+                                    [(ngModel)]="search"
+                                    (input)="dt2.filterGlobal(search , 'contains')" 
+                                    placeholder="Search keyword" />
+                            </p-iconField>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:20%">Nombre</th>
+                            <th style="width:20%">Pais</th>
+                            <th style="width:20%">Teléfono</th>
+                            <th style="width:20%">Estatus</th>
+                            <th style="width:20%">Fecha Registro</th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <p-columnFilter 
+                                    type="text"
+                                    field="nombre" 
+                                    placeholder="Buscar Por Nombre" 
+                                    ariaLabel="Filtrar Nombre" />
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    type="text"
+                                    field="pais"
+                                    placeholder="Buscar Por Pais" 
+                                    ariaLabel="Filtrar Pais" />
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    type="text"
+                                    field="telefono"
+                                    placeholder="Buscar Por Telefono" 
+                                    ariaLabel="Filtrar Telefono" />
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    type="text"
+                                    field="estatus"
+                                    placeholder="Buscar Por Estatus" 
+                                    ariaLabel="Filtrar Estatus" />
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    type="text"
+                                    field="fechaRegistro"
+                                    placeholder="Buscar Por Fecha" 
+                                    ariaLabel="Filtrar Fecha" />
+                            </th>
+                            
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-medico>
+                        <tr [pSelectableRow]="medicoSeleccionado" (dblclick)="detalleMedico(medico)">
+                            <td>
+                                {{ medico.nombre }}  {{medico.apellido}}
+                            </td>
+                            <td>
+                                <span class="ml-1 vertical-align-middle">
+                                    {{ medico.pais }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ml-1 vertical-align-middle">
+                                    {{ medico.telefono }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ml-1 vertical-align-middle">
+                                    {{ medico.estatus | estatus }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ml-1 vertical-align-middle">
+                                    {{ medico.fechaRegistro }}
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="5">Medicos No Encontrados.</td>
+                        </tr>
+                    </ng-template>
+                    </p-table>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<!--DIALOGO PARA MOSTRAR LA INFORMACION DEL MEDICO-->
+<p-dialog 
+    header="INFRMACIÓN DEL MÉDICO" 
+    [position]="'center'"
+    [(visible)]="visible" 
+    [modal]="true" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [style]="{ width: '50vw', height: '80vw' }" 
+    [draggable]="false" 
+    [resizable]="false">
+    
+  <p-stepper>
+      <p-stepperPanel header="Información Personal">
+          <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+              <div class="flex flex-column h-12rem">
+                <div class="container">
+                  <form>
+                    <!-- NOMBRE Y APELLIDO -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="nombre" name="nombre" [(ngModel)]="objMedicoDetalle.nombre"/>
+                          <label for="nombre">Nombre</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="apellido" name="apellido" [(ngModel)]="objMedicoDetalle.apellido"/>
+                          <label for="apellido">Apellidos</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- CORREO ELECTRONICO -->
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="email" name="email" [(ngModel)]="objMedicoDetalle.email"/>
+                          <label for="email">Correo electrónico</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- TELEFONO Y PAIS -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="telefono" name="telefono" [(ngModel)]="objMedicoDetalle.telefono"/>
+                          <label for="telefono">Teléfono</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="pais" name="pais" [(ngModel)]="objMedicoDetalle.pais"/>
+                          <label for="pais">País</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- CALLE Y COLONIA -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="colonia" name="colonia" [(ngModel)]="objMedicoDetalle.colonia"/>
+                          <label for="colonia">Colonia</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-6">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="calle" name="calle" [(ngModel)]="objMedicoDetalle.calle"/>
+                          <label for="calle">Calle</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                    <!-- NUMERO, CIUDAD Y CODIGO POSTAL -->
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="numero" name="numero" [(ngModel)]="objMedicoDetalle.numero"/>
+                          <label for="numero">Número</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-4">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="ciudad" name="ciudad" [(ngModel)]="objMedicoDetalle.ciudad"/>
+                          <label for="ciudad">Ciudad</label>
+                        </p-floatLabel>
+                      </div>
+                      <div class="col-sm-4">
+                        <p-floatLabel>
+                          <input readonly class="input_login" pInputText id="codigoPostal" name="codigoPostal" [(ngModel)]="objMedicoDetalle.codigoPostal"/>
+                          <label for="codigoPostal">C.P.</label>
+                        </p-floatLabel>
+                      </div>
+                    </div>
+                  </form>
+                </div>              
+              </div>
+              <div class="flex pt-4 justify-content-end">
+                  <p-button 
+                      label="Siguiente" 
+                      icon="pi pi-arrow-right" 
+                      iconPos="right"
+                      severity="info"
+                      (onClick)="nextCallback.emit()" />
+              </div>
+          </ng-template>
+      </p-stepperPanel>
+      <p-stepperPanel header="Información Profesional">
+          <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+              <div class="flex flex-column h-12rem">
+                  <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                    <div class="container">
+                      <form>
+                        <div *ngFor="let especialidad of objMedicoDetalle.especialidades; let i = index">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                <p>{{especialidad.especialidad}}</p>
+                                </div>
+                                <div class="col-sm-4">
+                                <p-floatLabel>
+                                    <input 
+                                    class="input_login" 
+                                    pInputText 
+                                    name="honorarios"
+                                    [(ngModel)]="especialidad.honorarios"
+                                    readonly
+                                    />
+                                    <label for="honorarios-{{i}}">Costo por consulta</label>
+                                </p-floatLabel>
+                                </div>
+                                <div class="col-sm-4">
+                                <p-floatLabel>
+                                    <input 
+                                    class="input_login" 
+                                    pInputText 
+                                    name="numCedula"
+                                    [(ngModel)]="especialidad.numCedula"
+                                    readonly
+                                    />
+                                    <label for="honorarios-{{i}}">Cedula de Especialida</label>
+                                </p-floatLabel>
+                                </div>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+              </div>
+              <div class="flex pt-4 justify-content-between">
+                  <p-button 
+                      label="Back" 
+                      icon="pi pi-arrow-left"
+                      severity="info" 
+                      (onClick)="prevCallback.emit()" />
+                  <div class="btnSubmit">
+                    <p-button 
+                      type="submit" 
+                      label="Canfirmar Solicitud" 
+                      [text]="true" 
+                      [raised]="true" 
+                      severity="info" 
+                      (onClick)="confirmarInformacionMedico()"
+                      ></p-button>
+                  </div>
+              </div>
+          </ng-template>
+      </p-stepperPanel>
+  </p-stepper>
+  <p-confirmDialog class="btnConfirm" />
+    <!-- <p-button (onClick)="confirmar($event)" label="Save" [outlined]="true" /> -->
+</p-dialog>
+
+<p-toast />
